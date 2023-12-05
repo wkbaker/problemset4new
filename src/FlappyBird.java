@@ -1,19 +1,25 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class FlappyBird implements ActionListener {
+public class FlappyBird implements ActionListener, MouseListener, KeyListener {
 
     public static FlappyBird flappyBird;
     public final int WIDTH = 800;
     public final int HEIGHT = 800;
     public Renderer renderer;
     public Rectangle bird;
+
+    public int ticks;
+    public int yMotion;
+    public int score;
     public ArrayList<Rectangle> columns;
+    public boolean gameOver;
+    public boolean started;
     public Random rand;
+
 
     public FlappyBird() {
         //create a new JFrame
@@ -27,6 +33,8 @@ public class FlappyBird implements ActionListener {
         jframe.add(renderer);
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setSize(WIDTH, HEIGHT);
+        jframe.addMouseListener(this);
+        jframe.addKeyListener(this);
         jframe.setResizable(false);
         //this creates a title for the game
         jframe.setTitle("Flappy Bird");
@@ -61,11 +69,101 @@ public class FlappyBird implements ActionListener {
 
     //this method sets the color of the columns
     public void paintColumn(Graphics g, Rectangle column){
+
         g.setColor(Color.GREEN.darker());
         g.fillRect(column.x, column.y, column.width, column.height);
     }
+    public void jump() {
+        if(gameOver) {
+            bird = new Rectangle(WIDTH/2 - 10, HEIGHT/2 - 10, 20, 20);
+          columns.clear();
+          yMotion = 0;
+          score = 0;
+
+            addColumn(true);
+            addColumn(true);
+            addColumn(true);
+            addColumn(true);
+            gameOver= false;
+
+        }
+        if(!started){
+            started = true;
+
+
+        } else if(!gameOver) {
+            if (yMotion>0) {
+                yMotion = 0;
+            }
+            yMotion -=10;
+
+        }
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e){
+        int speed =10;
+        ticks++;
+        if (started) {
+
+
+
+       for(int i=0; i<columns.size(); i++) {
+           Rectangle column = columns.get(i);
+           column.x-=speed;
+
+       }
+        if (ticks%2==0 && yMotion<15) {
+            yMotion+=2;
+        }
+        for(int i=0; i<columns.size(); i++) {
+            Rectangle column = columns.get(i);
+            if (column.x + column.width < 0) {
+                columns.remove(column);
+                //if it is the top column, add another column, so it will be infinite
+                if(column.y==0) {
+                    addColumn(false);
+
+                }
+
+                }
+
+            }
+        }
+
+        //moving the bird vertically
+            bird.y+= yMotion;
+        for(Rectangle column: columns){
+            //if statement shows that the bird is in the center of the column and the score updates by 1
+            if(column.y==0&& bird.x+bird.width/2>column.x+column.width/2-10&& bird.x+ bird.width/2<column.x+column.width/2+10) {
+                score++;
+            }
+            if (column.intersects(bird)){
+
+                gameOver=true;
+                if(bird.x<=column.x) {
+                    bird.x=column.x-bird.width;
+
+                } else {
+                    if(column.y!=0) {
+                        bird.y=column.y-bird.height;
+
+                    } else if (bird.y<column.height) {
+                        bird.y=column.height;
+                    }
+                }
+
+            }
+        }
+
+        if(bird.y> HEIGHT -120 || bird.y<0) {
+
+            gameOver=true;
+        }
+        if(bird.y+yMotion>=HEIGHT-120) {
+            bird.y = HEIGHT-120 - bird.height;
+        }
         renderer.repaint();
     }
 
@@ -86,11 +184,75 @@ public class FlappyBird implements ActionListener {
         //this creates a red square in the center of the game
         g.setColor(Color.RED);
         g.fillRect(bird.x, bird.y, bird.width, bird.height);
+
+        for(Rectangle column: columns) {
+            paintColumn(g, column);
+
+        }
+        g.setColor(Color.white);
+        g.setFont(new Font("Arial", 1, 100));
+        if(!started) {
+            g.drawString("Click to start!", 75,HEIGHT/2-50);
+
+        }
+        if (gameOver) {
+            g.drawString("Game Over!", 100,HEIGHT/2-50);
+
+        }
+        //if statement calculates the score as you play
+        if(!gameOver && started) {
+            g.drawString(String.valueOf(score), WIDTH/2-25,100);
+        }
+
     }
 
     //create a main method
     public static void main(String[] args) {
         flappyBird = new FlappyBird();
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        jump();
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if(e.getKeyCode() ==KeyEvent.VK_SPACE) {
+            jump();
+        }
 
     }
 }
