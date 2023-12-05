@@ -1,0 +1,15 @@
+In this projet we created a java based code that creates a version of the game of Flappy Bird and allows the user to click using the mouse or spacebar to move the bird in between the columns. 
+
+In the creation of this project we implemented three interfaces: ActionListener, MouseListener, and KeyListener
+We created two java classes; public FlappyBird() and public class Renderer extends Jpanel()
+
+The purpose of this code was to create a window that pops up on the screen when the program is run that has various graphics of different colors that generates the game Flappy Bird. 
+The program allows the user to click on the mousepad or spacebar to change the position of the bird in order to navigate the bird between the different columns.
+The program keeps track of the amount of times the user sucessfully passes through a column/obstacle.
+The program prints the message, "Game Over!" to the screen and ends the game when the bird hits one of the obstacles. The user then has the option to click on the screen again to restart the game.
+
+The program is able to run through the creation of various methods such as:
+- addColumn()
+- paintColumn()
+- jump()
+
