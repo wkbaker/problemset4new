@@ -13,3 +13,26 @@ The program is able to run through the creation of various methods such as:
 - paintColumn()
 - jump()
 
+
+Decisions during implementation of code:
+
+public FlappyBird()
+-This is a constructor that initializes objects such as JFrame, Timer, and Rendered, essentially preparing for the game to start. 
+
+public void addColumn(boolean start) 
+-When the boolean is true and the game has started, the method sets up the first pair of columns off the screen a specific distance a part from one another and then the columns appear on screen for the game to begin
+-When the boolean is false and the game has not just started, new pairs of columns are added to the game window
+
+
+public void jump()
+-This method handles the motion of the bird and the mechanics of when the game has started and ended
+-The first for loop allows columns to move across the screen at a certain speed
+-The next for loop checks to see if columns have moved off the screen and if so, removes these columns from the list
+-The if column(intersects(bird)) statement detects if the bird has collided into a column and if so, adjusts the gameOver condition to true
+
+renderer.repaint() 
+-This method is called when the game starts, ends, and is being played in order to display graphics, displauy text on the screen when the game begins and ends, etc. 
+
+
+
+
