@@ -136,7 +136,7 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
         }
         for(int i=0; i<columns.size(); i++) {
             Rectangle column = columns.get(i);
-            //this if method checks if any of the columns are not shown on the screen and then removes those columns
+            //this if statement checks if any of the columns are not shown on the screen and then removes those columns
             if (column.x + column.width < 0) {
                 columns.remove(column);
                 //if it is the top column, add another column, so it will be infinite
